@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:task_manager3/ui/screens/set_password_screen.dart';
 import 'package:task_manager3/ui/screens/sign_in_screen.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
@@ -39,7 +40,22 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                   style: TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 16),
-                TextFormField(controller: _pinTEController),
+                PinCodeTextField(
+                  length: 6,
+                  obscureText: false,
+                  animationType: AnimationType.fade,
+                  pinTheme: PinTheme(
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(5),
+                    fieldHeight: 50,
+                    fieldWidth: 50,
+                    activeFillColor: Colors.white,
+                  ),
+                  animationDuration: Duration(milliseconds: 300),
+                  backgroundColor: Colors.transparent,
+                  controller: _pinTEController,
+                  appContext: context,
+                ),
                 const SizedBox(height: 16),
                 ElevatedButton(onPressed: _onTapVerify, child: Text('Verify')),
                 const SizedBox(height: 12),
@@ -71,16 +87,14 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
   }
 
   void _onTapVerify() {
-    Navigator.pushReplacementNamed(
-      context,
-      SetPasswordScreen.name,
-    );
+    Navigator.pushReplacementNamed(context, SetPasswordScreen.name);
   }
 
   void _onTapSignIn() {
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamedAndRemoveUntil(
       context,
       SignInScreen.name,
+      (predicate) => false,
     );
   }
 

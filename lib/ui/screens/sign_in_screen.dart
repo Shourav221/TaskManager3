@@ -59,6 +59,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
+                        return 'Enter password';
+                      } else if ((value?.length ?? 0) < 8) {
                         return 'Enter a valid password';
                       }
                       return null;

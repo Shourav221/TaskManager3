@@ -93,8 +93,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _passwordTEController,
                   decoration: InputDecoration(hintText: 'Password'),
                   validator: (String? value) {
-                    if (value?.isEmpty == true) {
-                      return 'Enter your first name';
+                    if (value?.isEmpty ?? true) {
+                      return 'Enter password';
+                    } else if ((value?.length ?? 0) < 8) {
+                      return 'Enter a valid password';
                     }
                     return null;
                   },

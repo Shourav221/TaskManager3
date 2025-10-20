@@ -42,11 +42,27 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                 TextFormField(
                   controller: _passwordTEController,
                   decoration: InputDecoration(hintText: 'Password'),
+                  validator: (String? value){
+                    if(value?.isEmpty ?? true){
+                      return 'Enter password';
+                    }
+                    else if((value?.length ?? 0) < 8){
+                      return 'Enter a valid password';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _confirmPasswordTEController,
                   decoration: InputDecoration(hintText: 'Confirm password'),
+                  validator: (String? value){
+                    if((value ?? '') != _passwordTEController.text){
+                      return "Confirm password doesn't match";
+                    }
+
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton(
@@ -80,9 +96,9 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
 
   void _onTapConfirmPassword() {}
   void _onTapSignIn() {
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamedAndRemoveUntil(
       context,
-      SignInScreen.name,
+      SignInScreen.name,(predicate) => false
     );
   }
 
