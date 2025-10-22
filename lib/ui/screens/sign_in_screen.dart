@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager3/ui/screens/forgot_password_screen.dart';
+import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager3/ui/screens/sign_up_screen.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
 
@@ -118,6 +119,11 @@ class _SignInScreenState extends State<SignInScreen> {
   void _onTapSignInButton() {
     if (_formKey.currentState!.validate()) {
       //todo: sign in with api
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        MainNavBarHolderScreen.name,
+        (predicate) => false,
+      );
     }
   }
 
