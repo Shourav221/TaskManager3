@@ -147,7 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _onTapSignUp() {
     if (_formKey.currentState!.validate()) {
-      _clearTextField();
+
       signUp();
     }
   }
@@ -178,13 +178,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         SignInScreen.name,
         (predicate) => false,
       );
+      _clearTextField();
       showSnackBarMessage(context, 'Registration Successful. Please login');
     } else {
       showSnackBarMessage(context, response.errorMessage);
     }
   }
 
-  void _clearTextField(){
+  void _clearTextField() {
     _emailTEController.clear();
     _firstNameTEController.clear();
     _lastNameTEController.clear();
