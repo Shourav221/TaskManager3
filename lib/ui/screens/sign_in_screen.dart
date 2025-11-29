@@ -1,8 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager3/data/models/user_model.dart';
 import 'package:task_manager3/data/service/network_caller.dart';
 import 'package:task_manager3/data/service/urls.dart';
+import 'package:task_manager3/ui/controller/auth_controller.dart';
 import 'package:task_manager3/ui/screens/forgot_password_screen.dart';
 import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager3/ui/screens/sign_up_screen.dart';
@@ -149,6 +151,11 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {});
 
     if (response.isSuccess) {
+      UserModel userModel = UserModel.fromJson(response.body!['data']);
+      String token = response.body!['token'];
+
+      await AuthController.saveUserData(userModel, token);
+
       Navigator.pushNamedAndRemoveUntil(
         context,
         MainNavBarHolderScreen.name,
