@@ -14,20 +14,48 @@ class ProgressTaskListScreen extends StatefulWidget {
 }
 
 class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
-
-
+  bool _getProgressTaskInProgress = false;
+  List<TaskModel> _getProgressList = [];
 
   @override
+  void initState() {
+    _getProgressTask();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        // return TaskCard(
-        //   taskType: TaskType.progress,
-        //   taskModel: _getProgressList[index],
-        // );
-      },
+    return Visibility(
+      visible: _getProgressTaskInProgress == false,
+      replacement: CenteredCircularProgressIndicator(),
+      child: ListView.builder(
+        itemCount: _getProgressList.length,
+        itemBuilder: (context, index) {
+          return TaskCard(
+            taskType: TaskType.progress,
+            taskModel: _getProgressList[index],
+          );
+        },
+      ),
     );
   }
 
+  Future<void> _getProgressTask() async {
+    _getProgressTaskInProgress = true;
+    setState(() {});
+
+    NetworkResponse response = await NetworkCaller.getRequest(
+      url: Urls.getProgressTasksUrl,
+    );
+
+    if (response.isSuccess) {
+      List<TaskModel> list = [];
+      for (Map<String, dynamic> jsonData in response.body!['data']) {
+        list.add(TaskModel.fromJson(jsonData));
+      }
+      _getProgressList = list;
+    }
+
+    _getProgressTaskInProgress = false;
+    setState(() {});
+  }
 }
