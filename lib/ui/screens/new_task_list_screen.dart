@@ -81,7 +81,7 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
     setState(() {});
 
     NetworkResponse response = await NetworkCaller.getRequest(
-      url: Urls.getNewTasksTaskUrl,
+      url: Urls.getNewTasksUrl,
     );
 
     if (response.isSuccess) {

@@ -81,7 +81,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     if (_formKey.currentState!.validate()) {
       _addNewTask();
     }
-    // Navigator.pop(context);
   }
 
   Future<void> _addNewTask() async {

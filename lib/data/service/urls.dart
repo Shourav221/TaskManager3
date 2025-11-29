@@ -4,5 +4,6 @@ class Urls{
   static const String registrationUrl = "$_baseUrl/Registration";
   static const String logInUrl = "$_baseUrl/Login";
   static const String createTaskUrl = "$_baseUrl/createTask";
-  static const String getNewTasksTaskUrl = "$_baseUrl/listTaskByStatus/New";
+  static const String getNewTasksUrl = "$_baseUrl/listTaskByStatus/New";
+  static const String getCompletedTasksUrl = "$_baseUrl/listTaskByStatus/New";
 }
