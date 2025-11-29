@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager3/data/service/network_caller.dart';
-import 'package:task_manager3/data/service/urls.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
-import 'package:task_manager3/ui/widgets/show_snack_bar_message.dart';
 import 'package:task_manager3/ui/widgets/tm_app_bar.dart';
-
-import '../../app.dart';
-import '../widgets/centered_circular_progress_indicator.dart';
 
 class AddNewTaskScreen extends StatefulWidget {
   const AddNewTaskScreen({super.key});
@@ -22,8 +16,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  bool _addNewTaskInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,15 +34,13 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
-                  textInputAction: TextInputAction.next,
                   controller: _subjectTEController,
-                  decoration: InputDecoration(hintText: 'Subject'),
-                  validator: (String? value) {
-                    if (value?.trim().isEmpty == true) {
+                  decoration: InputDecoration(hintText: 'title'),
+                  validator: (String? value){
+                    if(value?.trim().isEmpty == true){
                       return "Enter your title.";
-                    } else {
-                      return null;
                     }
+                    else null;
                   },
                 ),
                 const SizedBox(height: 12),
@@ -58,21 +48,16 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   controller: _descriptionTEController,
                   maxLines: 6,
                   decoration: InputDecoration(hintText: 'Description'),
-                  validator: (String? value) {
-                    if (value?.trim().isEmpty == true) {
+                  validator: (String? value){
+                    if(value?.trim().isEmpty == true){
                       return "Enter any description";
                     }
-                    return null;
                   },
                 ),
                 const SizedBox(height: 12),
-                Visibility(
-                  visible: _addNewTaskInProgress == false,
-                  replacement: CenteredCircularProgressIndicator(),
-                  child: ElevatedButton(
-                    onPressed: _onTapAddNewTask,
-                    child: Icon(Icons.arrow_circle_right_outlined),
-                  ),
+                ElevatedButton(
+                  onPressed: _onTapAddNewTask,
+                  child: Icon(Icons.arrow_circle_right_outlined),
                 ),
               ],
             ),
@@ -83,45 +68,13 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
   }
 
   void _onTapAddNewTask() {
-    if (_formKey.currentState!.validate()) {
-      _addNewTask();
-    }
-    // Navigator.pushReplacementNamed(context, MainNavBarHolderScreen.name);
+    if(_formKey.currentState!.validate()){
 
-    // Navigator.pop(context);
+    }
+    Navigator.pop(context);
   }
 
-  Future<void> _addNewTask() async {
-    _addNewTaskInProgress = true;
-    setState(() {});
 
-    Map<String, String> requestBody = {
-      "title": _subjectTEController.text.trim(),
-      "description": _descriptionTEController.text.trim(),
-      "status": "New",
-    };
-
-    NetworkResponse response = await NetworkCaller.postRequest(
-      url: Urls.createTaskUrl,
-      body: requestBody,
-    );
-    _addNewTaskInProgress = false;
-    setState(() {});
-
-    if (response.isSuccess) {
-      _subjectTEController.clear();
-      _descriptionTEController.clear();
-      showSnackBarMessage(
-        TaskManagerApp.navigator.currentContext!,
-        "New task added",
-      );
-    } else {
-      showSnackBarMessage(
-        TaskManagerApp.navigator.currentContext!,
-        response.errorMessage,
-      );
-    }
-  }
 
   @override
   void dispose() {
