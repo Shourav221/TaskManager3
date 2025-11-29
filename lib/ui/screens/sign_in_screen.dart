@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager3/app.dart';
 import 'package:task_manager3/data/models/user_model.dart';
 import 'package:task_manager3/data/service/network_caller.dart';
 import 'package:task_manager3/data/service/urls.dart';
@@ -10,7 +11,7 @@ import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager3/ui/screens/sign_up_screen.dart';
 import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
-import 'package:task_manager3/ui/widgets/show_snackbar_message.dart';
+import 'package:task_manager3/ui/widgets/show_snack_bar_message.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -144,7 +145,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     NetworkResponse response = await NetworkCaller.postRequest(
       url: Urls.logInUrl,
-      body: requestBody,
+      body: requestBody, isFromLogin: true
     );
 
     _signInProgress = false;
@@ -157,13 +158,13 @@ class _SignInScreenState extends State<SignInScreen> {
       await AuthController.saveUserData(userModel, token);
 
       Navigator.pushNamedAndRemoveUntil(
-        context,
+        TaskManagerApp.navigator.currentContext!,
         MainNavBarHolderScreen.name,
         (predicate) => false,
       );
-      showSnackBarMessage(context, 'Login Success');
+      showSnackBarMessage(TaskManagerApp.navigator.currentContext!, 'Login Success');
     } else {
-      showSnackBarMessage(context, response.errorMessage);
+      showSnackBarMessage(TaskManagerApp.navigator.currentContext!, response.errorMessage);
     }
   }
 

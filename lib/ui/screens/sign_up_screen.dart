@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:task_manager3/data/service/network_caller.dart';
 import 'package:task_manager3/data/service/urls.dart';
 import 'package:task_manager3/ui/screens/sign_in_screen.dart';
+import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
-import 'package:task_manager3/ui/widgets/show_snackbar_message.dart';
+import 'package:task_manager3/ui/widgets/show_snack_bar_message.dart';
+
+import '../../app.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -108,7 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 24),
                 Visibility(
                   visible: _signUpInProgress == false,
-                  replacement: Center(child: CircularProgressIndicator()),
+                  replacement: CenteredCircularProgressIndicator(),
                   child: ElevatedButton(
                     onPressed: _onTapSignUp,
                     child: Icon(Icons.arrow_circle_right_outlined),
@@ -174,14 +177,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (response.isSuccess == true) {
       Navigator.pushNamedAndRemoveUntil(
-        context,
+        TaskManagerApp.navigator.currentContext!,
         SignInScreen.name,
         (predicate) => false,
       );
       _clearTextField();
-      showSnackBarMessage(context, 'Registration Successful. Please login');
+      showSnackBarMessage(TaskManagerApp.navigator.currentContext!, 'Registration Successful. Please login');
     } else {
-      showSnackBarMessage(context, response.errorMessage);
+      showSnackBarMessage(TaskManagerApp.navigator.currentContext!, response.errorMessage);
     }
   }
 

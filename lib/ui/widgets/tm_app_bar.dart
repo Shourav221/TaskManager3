@@ -3,6 +3,8 @@ import 'package:task_manager3/ui/controller/auth_controller.dart';
 import 'package:task_manager3/ui/screens/sign_in_screen.dart';
 import 'package:task_manager3/ui/screens/update_profile_screen.dart';
 
+import '../../app.dart';
+
 class TMAppBar extends StatefulWidget implements PreferredSizeWidget {
   const TMAppBar({super.key});
 
@@ -59,7 +61,7 @@ class _TMAppBarState extends State<TMAppBar> {
   void _onTapLogOutButton() async{
     await AuthController.clearUserData();
     Navigator.pushNamedAndRemoveUntil(
-      context,
+      TaskManagerApp.navigator.currentContext!,
       SignInScreen.name,
       (predicate) => false,
     );

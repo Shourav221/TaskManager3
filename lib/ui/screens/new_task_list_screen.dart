@@ -47,10 +47,10 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onTapAddNewTaskButton,
-        child: Icon(Icons.add),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
+        child: Icon(Icons.add),
       ),
 
 

@@ -6,6 +6,8 @@ import 'package:task_manager3/ui/screens/sign_in_screen.dart';
 import 'package:task_manager3/ui/utils/assets_path.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
 
+import '../../app.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -26,9 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(seconds: 2));
     bool isLoggedIn = await AuthController.isUserLoggedIn();
     if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, MainNavBarHolderScreen.name);
+      Navigator.pushReplacementNamed(TaskManagerApp.navigator.currentContext!, MainNavBarHolderScreen.name);
     } else {
-      Navigator.pushReplacementNamed(context, SignInScreen.name);
+      Navigator.pushReplacementNamed(TaskManagerApp.navigator.currentContext!, SignInScreen.name);
     }
   }
 
