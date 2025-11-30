@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager3/data/models/task_model.dart';
+import 'package:task_manager3/data/models/task_status_count_model.dart';
 import 'package:task_manager3/data/service/network_caller.dart';
 import 'package:task_manager3/data/service/urls.dart';
 import 'package:task_manager3/ui/screens/add_new_task_screen.dart';
@@ -17,12 +18,18 @@ class NewTaskListScreen extends StatefulWidget {
 }
 
 class _NewTaskListScreenState extends State<NewTaskListScreen> {
-  bool _getNewTasksInProcess = false;
+  bool _getNewTasksInProgress = false;
+  bool _getTaskStatusCountInProgress = false;
   List<TaskModel> _newTaskList = [];
+  List<TaskStatusCountModel> _taskStatusCountList = [];
 
   @override
   void initState() {
-    _getNewTaskScreen();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _getTaskStatusCount();
+      _getNewTask();
+    });
+
     super.initState();
   }
 
@@ -36,21 +43,28 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
             const SizedBox(height: 15),
             SizedBox(
               height: 100,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return TaskCountSummaryCard(title: 'Cancelled', count: 13);
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(width: 4);
-                },
-                itemCount: 4,
+              child: Visibility(
+                visible: _getTaskStatusCountInProgress == false,
+                replacement: CenteredCircularProgressIndicator(),
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return TaskCountSummaryCard(
+                      title: _taskStatusCountList[index].id,
+                      count: _taskStatusCountList[index].sum,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(width: 4);
+                  },
+                  itemCount: _taskStatusCountList.length,
+                ),
               ),
             ),
 
             Expanded(
               child: Visibility(
-                visible: _getNewTasksInProcess == false,
+                visible: _getNewTasksInProgress == false,
                 replacement: CenteredCircularProgressIndicator(),
                 child: ListView.builder(
                   itemCount: _newTaskList.length,
@@ -68,18 +82,47 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onTapAddNewTaskButton,
-        child: Icon(Icons.add),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
+        child: Icon(Icons.add),
       ),
     );
   }
 
-  Future<void> _getNewTaskScreen() async {
-    _getNewTasksInProcess = true;
-    setState(() {});
+  Future<void> _getTaskStatusCount() async {
+    _getTaskStatusCountInProgress = true;
+    if (mounted) {
+      setState(() {});
+    }
 
+    NetworkResponse response = await NetworkCaller.getRequest(
+      url: Urls.getTaskStatusCountUrl,
+    );
+
+    if (response.isSuccess) {
+      List<TaskStatusCountModel> list = [];
+      for (Map<String, dynamic> jsonData in response.body!['data']) {
+        list.add(TaskStatusCountModel.fromJson(jsonData));
+      }
+      _taskStatusCountList = list;
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context, response.errorMessage);
+      }
+    }
+
+    _getTaskStatusCountInProgress = false;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _getNewTask() async {
+    _getNewTasksInProgress = true;
+    if (mounted) {
+      setState(() {});
+    }
     NetworkResponse response = await NetworkCaller.getRequest(
       url: Urls.getNewTasksUrl,
     );
@@ -92,10 +135,15 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
 
       _newTaskList = list;
     } else {
-      showSnackBarMessage(context, response.errorMessage);
+      if (mounted) {
+        showSnackBarMessage(context, response.errorMessage);
+      }
     }
-    _getNewTasksInProcess = false;
-    setState(() {});
+
+    _getNewTasksInProgress = false;
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _onTapAddNewTaskButton() {

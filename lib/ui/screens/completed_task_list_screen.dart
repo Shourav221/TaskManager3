@@ -21,9 +21,12 @@ class _CompletedTaskListScreenState extends State<CompletedTaskListScreen> {
 
   @override
   void initState() {
-    _getCompletedTask();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getCompletedTask();
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Visibility(
@@ -49,21 +52,17 @@ class _CompletedTaskListScreenState extends State<CompletedTaskListScreen> {
       url: Urls.getCompletedTasksUrl,
     );
 
-    if(response.isSuccess){
+    if (response.isSuccess) {
       List<TaskModel> list = [];
 
-      for(Map<String, dynamic> jsonData in response.body!['data']){
+      for (Map<String, dynamic> jsonData in response.body!['data']) {
         list.add(TaskModel.fromJson(jsonData));
       }
       _completedTaskList = list;
-    }
-    else{
+    } else {
       showSnackBarMessage(context, response.errorMessage);
     }
     _getCompletedTaskInProgress = false;
-    setState(() {
-
-    });
+    setState(() {});
   }
-
 }

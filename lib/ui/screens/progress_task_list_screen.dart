@@ -19,7 +19,9 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
 
   @override
   void initState() {
-    _getProgressTask();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _getProgressTask();
+    });
     super.initState();
   }
   @override

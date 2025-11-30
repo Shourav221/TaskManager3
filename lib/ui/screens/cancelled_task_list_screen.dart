@@ -20,9 +20,13 @@ class _CancelledTaskListScreenState extends State<CancelledTaskListScreen> {
 
   @override
   void initState() {
-    _getCancelledTask();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getCancelledTask();
+    });
+
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Visibility(
