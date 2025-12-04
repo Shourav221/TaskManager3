@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:task_manager3/data/models/user_model.dart';
 import 'package:task_manager3/ui/controller/auth_controller.dart';
 import 'package:task_manager3/ui/screens/sign_in_screen.dart';
 import 'package:task_manager3/ui/screens/update_profile_screen.dart';
@@ -22,7 +25,13 @@ class _TMAppBarState extends State<TMAppBar> {
       backgroundColor: Colors.green,
       title: Row(
         children: [
-          CircleAvatar(),
+          CircleAvatar(
+            backgroundImage: AuthController.userModel!.photo == null
+                ? null
+                : MemoryImage(
+                    base64Decode(AuthController.userModel?.photo ?? ''),
+                  ),
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: GestureDetector(
@@ -31,11 +40,11 @@ class _TMAppBarState extends State<TMAppBar> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Shourav Mahato',
+                    AuthController.userModel!.fullName,
                     style: TextStyle(fontSize: 14, color: Colors.white),
                   ),
                   Text(
-                    'shourav@gmail.com',
+                    AuthController.userModel!.email,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -58,7 +67,7 @@ class _TMAppBarState extends State<TMAppBar> {
     }
   }
 
-  void _onTapLogOutButton() async{
+  void _onTapLogOutButton() async {
     await AuthController.clearUserData();
     Navigator.pushNamedAndRemoveUntil(
       TaskManagerApp.navigator.currentContext!,

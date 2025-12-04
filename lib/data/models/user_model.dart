@@ -4,6 +4,11 @@ class UserModel {
   late String firstName;
   late String lastName;
   late String mobile;
+  String? photo;
+
+  String get fullName{
+    return '$firstName $lastName';
+  }
 
   UserModel.fromJson(Map<String, dynamic> jsonData) {
     id = jsonData['_id'];
@@ -11,17 +16,17 @@ class UserModel {
     firstName = jsonData['firstName'];
     lastName = jsonData['lastName'];
     mobile = jsonData['mobile'];
+    photo = jsonData['photo'];
   }
 
-  Map<String,dynamic> toJson(){
-    return{
-      '_id' : id,
-      'email' : email,
-      'firstName' : firstName,
-      'lastName' : lastName,
-      'mobile' : mobile
-
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'email': email,
+      'firstName': firstName,
+      'lastName': lastName,
+      'mobile': mobile,
+      'photo': photo,
     };
   }
 }
-
