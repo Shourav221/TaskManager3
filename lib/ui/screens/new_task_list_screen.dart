@@ -25,12 +25,11 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      _getTaskStatusCount();
-      _getNewTask();
-    });
-
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getNewTaskList();
+      _getTaskStatusCount();
+    });
   }
 
   @override
@@ -51,7 +50,7 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
                   itemBuilder: (context, index) {
                     return TaskCountSummaryCard(
                       title: _taskStatusCountList[index].id,
-                      count: _taskStatusCountList[index].sum,
+                      count: _taskStatusCountList[index].count,
                     );
                   },
                   separatorBuilder: (context, index) {
@@ -72,6 +71,12 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
                     return TaskCard(
                       taskType: TaskType.tNew,
                       taskModel: _newTaskList[index],
+                      onStatusUpdate: () {
+                        setState(() {
+                          _newTaskList;
+                          _taskStatusCountList;
+                        });
+                        },
                     );
                   },
                 ),
@@ -92,9 +97,7 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
 
   Future<void> _getTaskStatusCount() async {
     _getTaskStatusCountInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
+    setState(() {});
 
     NetworkResponse response = await NetworkCaller.getRequest(
       url: Urls.getTaskStatusCountUrl,
@@ -118,7 +121,7 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
     }
   }
 
-  Future<void> _getNewTask() async {
+  Future<void> _getNewTaskList() async {
     _getNewTasksInProgress = true;
     if (mounted) {
       setState(() {});
@@ -141,9 +144,7 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
     }
 
     _getNewTasksInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
+    setState(() {});
   }
 
   void _onTapAddNewTaskButton() {

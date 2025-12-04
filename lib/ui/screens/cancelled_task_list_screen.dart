@@ -38,6 +38,9 @@ class _CancelledTaskListScreenState extends State<CancelledTaskListScreen> {
           return TaskCard(
             taskType: TaskType.cancelled,
             taskModel: _cancelledTaskList[index],
+            onStatusUpdate: () {
+              _cancelledTaskList;
+            },
           );
         },
       ),

@@ -1,9 +1,9 @@
 class TaskStatusCountModel{
   late String id;
-  late int sum;
+  late int count;
 
   TaskStatusCountModel.fromJson(Map<String,dynamic> jsonData){
     id = jsonData['_id'];
-    sum = jsonData['sum'];
+    count = jsonData['sum'];
   }
 }

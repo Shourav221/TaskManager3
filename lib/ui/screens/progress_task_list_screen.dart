@@ -19,11 +19,12 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _getProgressTask();
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Visibility(
@@ -35,6 +36,9 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
           return TaskCard(
             taskType: TaskType.progress,
             taskModel: _getProgressList[index],
+            onStatusUpdate: () {
+              _getProgressList;
+            },
           );
         },
       ),

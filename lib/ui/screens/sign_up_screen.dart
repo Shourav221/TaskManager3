@@ -150,7 +150,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _onTapSignUp() {
     if (_formKey.currentState!.validate()) {
-
       signUp();
     }
   }
@@ -177,14 +176,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (response.isSuccess == true) {
       Navigator.pushNamedAndRemoveUntil(
-        TaskManagerApp.navigator.currentContext!,
+        context,
         SignInScreen.name,
         (predicate) => false,
       );
       _clearTextField();
-      showSnackBarMessage(TaskManagerApp.navigator.currentContext!, 'Registration Successful. Please login');
+      showSnackBarMessage(context, 'Registration Successful. Please login');
     } else {
-      showSnackBarMessage(TaskManagerApp.navigator.currentContext!, response.errorMessage);
+      showSnackBarMessage(context, response.errorMessage);
     }
   }
 

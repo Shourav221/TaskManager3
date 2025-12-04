@@ -33,7 +33,7 @@ class NetworkCaller {
       };
 
       _logRequest(url, null, headers);
-      Response response = await get(uri , headers: headers);
+      Response response = await get(uri, headers: headers);
       _logResponse(url, response);
       if (response.statusCode == 200) {
         final decodedJson = jsonDecode(response.body);

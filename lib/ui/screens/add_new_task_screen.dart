@@ -45,8 +45,9 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   validator: (String? value) {
                     if (value?.trim().isEmpty == true) {
                       return "Enter your title.";
-                    } else
-                      null;
+                    } else {
+                      return null;
+                    }
                   },
                 ),
                 const SizedBox(height: 12),
@@ -57,6 +58,8 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   validator: (String? value) {
                     if (value?.trim().isEmpty == true) {
                       return "Enter any description";
+                    } else {
+                      return null;
                     }
                   },
                 ),
@@ -97,7 +100,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       body: requestedBody,
     );
 
-
     if (response.isSuccess) {
       _titleTEController.clear();
       _descriptionTEController.clear();
@@ -108,7 +110,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     _addNewTaskInProgress = false;
     setState(() {});
     Navigator.pop(context);
-
   }
 
   @override
