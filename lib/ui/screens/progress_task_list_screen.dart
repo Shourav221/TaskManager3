@@ -39,6 +39,9 @@ class _ProgressTaskListScreenState extends State<ProgressTaskListScreen> {
             onStatusUpdate: () {
               _getProgressList;
             },
+            onDeleteTask: () {
+              _getProgressList;
+            },
           );
         },
       ),

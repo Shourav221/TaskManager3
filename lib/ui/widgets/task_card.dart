@@ -13,11 +13,13 @@ class TaskCard extends StatefulWidget {
     required this.taskType,
     required this.taskModel,
     required this.onStatusUpdate,
+    required this.onDeleteTask,
   });
 
   final TaskType taskType;
   final TaskModel taskModel;
   final VoidCallback onStatusUpdate;
+  final VoidCallback onDeleteTask;
 
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -25,6 +27,7 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   bool _updateTaskStatusInProgress = false;
+  bool _deleteTaskInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -70,7 +73,16 @@ class _TaskCardState extends State<TaskCard> {
                     icon: Icon(Icons.edit),
                   ),
                 ),
-                IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                Visibility(
+                  visible: _deleteTaskInProgress == false,
+                  replacement: CenteredCircularProgressIndicator(),
+                  child: IconButton(
+                    onPressed: () {
+                      _showDeleteTaskDialog();
+                    },
+                    icon: Icon(Icons.delete),
+                  ),
+                ),
               ],
             ),
           ],
@@ -184,6 +196,56 @@ class _TaskCardState extends State<TaskCard> {
 
     if (response.isSuccess) {
       widget.onStatusUpdate();
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context, response.errorMessage);
+      }
+    }
+  }
+
+  void _showDeleteTaskDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text('Delete Task?'),
+          content: Text("Are you sure you want to delete this task?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(onPressed: () {
+              Navigator.pop(ctx);
+              _deleteTask();
+            }, child: Text('Delete')),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteTask() async {
+    _deleteTaskInProgress = true;
+    if (mounted) {
+      setState(() {});
+    }
+
+    NetworkResponse response = await NetworkCaller.getRequest(
+      url: Urls.deleteTaskUrl(widget.taskModel.id),
+    );
+    _deleteTaskInProgress = false;
+    if (mounted) {
+      setState(() {});
+    }
+
+    if (response.isSuccess) {
+      widget.onDeleteTask();
+      if (mounted) {
+        showSnackBarMessage(context, 'Task deleted');
+      }
     } else {
       if (mounted) {
         showSnackBarMessage(context, response.errorMessage);

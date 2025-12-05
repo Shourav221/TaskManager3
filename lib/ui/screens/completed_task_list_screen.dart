@@ -41,6 +41,9 @@ class _CompletedTaskListScreenState extends State<CompletedTaskListScreen> {
             onStatusUpdate: () {
               _completedTaskList;
             },
+            onDeleteTask: () {
+              _completedTaskList;
+            },
           );
         },
       ),

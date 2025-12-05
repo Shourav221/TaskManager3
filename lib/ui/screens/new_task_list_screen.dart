@@ -76,7 +76,11 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
                           _newTaskList;
                           _taskStatusCountList;
                         });
-                        },
+                      },
+                      onDeleteTask: () {
+                        _newTaskList;
+                        _taskStatusCountList;
+                      },
                     );
                   },
                 ),

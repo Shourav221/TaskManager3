@@ -41,6 +41,9 @@ class _CancelledTaskListScreenState extends State<CancelledTaskListScreen> {
             onStatusUpdate: () {
               _cancelledTaskList;
             },
+            onDeleteTask: () {
+              _cancelledTaskList;
+            },
           );
         },
       ),
