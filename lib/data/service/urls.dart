@@ -18,4 +18,6 @@ class Urls {
 
   static const String profileUpdateUrl = "$_baseUrl/ProfileUpdate";
   static String deleteTaskUrl(String id) => "$_baseUrl/deleteTask/$id";
+  static String recoverVerifyEmail(String email) =>
+      "$_baseUrl/RecoverVerifyEmail/$email";
 }
