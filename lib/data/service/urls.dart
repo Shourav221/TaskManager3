@@ -23,5 +23,7 @@ class Urls {
   static String recoverVerifyOtp(String email,String otp) =>
       "$_baseUrl/RecoverVerifyOtp/$email/$otp";
 
+  static String recoverResetPassword = "$_baseUrl/RecoverResetPassword";
+
 
 }

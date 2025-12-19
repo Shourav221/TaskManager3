@@ -114,13 +114,15 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
   }
 
   Future<void> _verifyOtp() async {
+    final String otp = _pinTEController.text;
+    final String email = widget.email;
     _verifyOtpInProgress = true;
     if (mounted) {
       setState(() {});
     }
 
     NetworkResponse response = await NetworkCaller.getRequest(
-      url: Urls.recoverVerifyOtp(widget.email, _pinTEController.text),
+      url: Urls.recoverVerifyOtp(email, otp),
     );
     _verifyOtpInProgress = false;
     if (mounted) {
@@ -129,7 +131,13 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
 
     if (response.isSuccess) {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, SetPasswordScreen.name);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SetPasswordScreen(email: email, otp: otp),
+          ),
+          (predicate) => false,
+        );
       }
     } else {
       if (mounted) {
