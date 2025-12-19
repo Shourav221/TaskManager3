@@ -20,4 +20,8 @@ class Urls {
   static String deleteTaskUrl(String id) => "$_baseUrl/deleteTask/$id";
   static String recoverVerifyEmail(String email) =>
       "$_baseUrl/RecoverVerifyEmail/$email";
+  static String recoverVerifyOtp(String email,String otp) =>
+      "$_baseUrl/RecoverVerifyOtp/$email/$otp";
+
+
 }

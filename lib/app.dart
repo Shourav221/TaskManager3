@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:task_manager3/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager3/ui/screens/forgot_password_screen.dart';
 import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
-import 'package:task_manager3/ui/screens/pin_verification_screen.dart';
 import 'package:task_manager3/ui/screens/set_password_screen.dart';
 import 'package:task_manager3/ui/screens/sign_in_screen.dart';
 import 'package:task_manager3/ui/screens/sign_up_screen.dart';
@@ -57,7 +56,6 @@ class TaskManagerApp extends StatelessWidget {
         SignInScreen.name: (context) => SignInScreen(),
         ForgotPasswordScreen.name: (context) => ForgotPasswordScreen(),
         SignUpScreen.name: (context) => SignUpScreen(),
-        PinVerificationScreen.name: (context) => PinVerificationScreen(),
         SetPasswordScreen.name: (context) => SetPasswordScreen(),
         MainNavBarHolderScreen.name : (context) => MainNavBarHolderScreen(),
         AddNewTaskScreen.name : (context) => AddNewTaskScreen(),

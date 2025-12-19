@@ -6,6 +6,7 @@ import 'package:task_manager3/data/service/urls.dart';
 import 'package:task_manager3/ui/controller/auth_controller.dart';
 import 'package:task_manager3/ui/screens/pin_verification_screen.dart';
 import 'package:task_manager3/ui/screens/sign_in_screen.dart';
+import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
 import 'package:task_manager3/ui/widgets/show_snack_bar_message.dart';
 
@@ -58,9 +59,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _onTapForgotPassword,
-                  child: Icon(Icons.arrow_circle_right_outlined),
+                Visibility(
+                  visible: _forgotPasswordInProgress == false,
+                  replacement: CenteredCircularProgressIndicator(),
+                  child: ElevatedButton(
+                    onPressed: _onTapForgotPassword,
+                    child: Icon(Icons.arrow_circle_right_outlined),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Center(
@@ -90,7 +95,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-
   void _onTapForgotPassword() {
     if (_formKey.currentState!.validate()) {
       _forgotPassword();
@@ -100,7 +104,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   void _onTapSignIn() {
     Navigator.pushReplacementNamed(context, SignInScreen.name);
   }
-
 
   Future<void> _forgotPassword() async {
     _forgotPasswordInProgress = true;
@@ -119,7 +122,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     if (response.isSuccess) {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, PinVerificationScreen.name);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                PinVerificationScreen(email: _emailTEController.text),
+          ),
+          (predicate) => false,
+        );
         showSnackBarMessage(context, 'A 6 digit OTP code sent to your email');
       }
     } else {
@@ -128,7 +138,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       }
     }
   }
-
 
   @override
   void dispose() {
