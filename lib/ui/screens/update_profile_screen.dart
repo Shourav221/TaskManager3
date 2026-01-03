@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:task_manager3/data/models/user_model.dart';
 import 'package:task_manager3/data/service/network_caller.dart';
 import 'package:task_manager3/data/service/urls.dart';
 import 'package:task_manager3/ui/controller/auth_controller.dart';
@@ -197,6 +198,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if (mounted) {
       setState(() {});
     }
+
+    Uint8List? imageBytes;
     Map<String, String> requestBody = {
       "email": _emailTEController.text.trim(),
       "firstName": _firstNameTEController.text.trim(),
@@ -210,7 +213,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
 
     if (_selectedImage != null) {
-      Uint8List imageBytes = await _selectedImage!.readAsBytes();
+      imageBytes = await _selectedImage!.readAsBytes();
       requestBody['photo'] = base64Encode(imageBytes);
     }
     NetworkResponse response = await NetworkCaller.postRequest(
@@ -223,6 +226,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
 
     if (response.isSuccess) {
+      UserModel userModel = UserModel(
+        id: AuthController.userModel!.id,
+        email: _emailTEController.text.trim(),
+        firstName: _firstNameTEController.text.trim(),
+        lastName: _lastNameTEController.text.trim(),
+        mobile: _mobileTEController.text.trim(),
+        photo: imageBytes == null
+            ? AuthController.userModel?.photo
+            : base64Encode(imageBytes),
+      );
+      await AuthController.updateUserData(userModel);
       _passwordTEController.clear();
       if (mounted) {
         showSnackBarMessage(context, "Profile update successfully");

@@ -8,8 +8,6 @@ import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.da
 import 'package:task_manager3/ui/widgets/screen_background.dart';
 import 'package:task_manager3/ui/widgets/show_snack_bar_message.dart';
 
-import '../../app.dart';
-
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -175,15 +173,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {});
 
     if (response.isSuccess == true) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        SignInScreen.name,
-        (predicate) => false,
-      );
-      _clearTextField();
-      showSnackBarMessage(context, 'Registration Successful. Please login');
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          SignInScreen.name,
+          (predicate) => false,
+        );
+        _clearTextField();
+        showSnackBarMessage(context, 'Registration Successful. Please login');
+      }
     } else {
-      showSnackBarMessage(context, response.errorMessage);
+      if (mounted) {
+        showSnackBarMessage(context, response.errorMessage);
+      }
     }
   }
 
