@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager3/ui/controller/sign_in_controller.dart';
 import 'package:task_manager3/ui/screens/forgot_password_screen.dart';
+import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager3/ui/screens/sign_up_screen.dart';
 import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
@@ -22,7 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SignInController _signInController = SignInController();
+  // final SignInController _signInController = Get.find<SignInController>();
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                   ),
                   SizedBox(height: 16),
-                  GetBuilder(
-                    init: _signInController,
+                  GetBuilder<SignInController>(
                     builder: (controller) {
                       return Visibility(
                         visible: controller.inProgress == false,
@@ -136,17 +136,17 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signIn() async {
-    final bool isSuccess = await _signInController.signIn(
+    final bool isSuccess = await Get.find<SignInController>().signIn(
       _emailTEController.text.trim(),
       _passwordTEController.text,
     );
 
     if(isSuccess){
-      Get.offAllNamed(SignInScreen.name);
+      Get.offAllNamed(MainNavBarHolderScreen.name);
     }
     else{
       if(mounted){
-        showSnackBarMessage(context, _signInController.errorMessage!);
+        showSnackBarMessage(context, Get.find<SignInController>().errorMessage!);
       }
     }
   }

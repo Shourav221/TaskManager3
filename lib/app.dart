@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager3/controller_binder.dart';
 import 'package:task_manager3/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager3/ui/screens/forgot_password_screen.dart';
 import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
@@ -62,6 +63,7 @@ class TaskManagerApp extends StatelessWidget {
         AddNewTaskScreen.name : (context) => AddNewTaskScreen(),
         UpdateProfileScreen.name : (context) => UpdateProfileScreen(),
       },
+      initialBinding: ControllerBinder(),
     );
   }
 }
