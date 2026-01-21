@@ -1,12 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager3/data/models/user_model.dart';
-import 'package:task_manager3/data/service/network_caller.dart';
-import 'package:task_manager3/data/service/urls.dart';
-import 'package:task_manager3/ui/controller/auth_controller.dart';
+import 'package:get/get.dart';
+import 'package:task_manager3/ui/controller/sign_in_controller.dart';
 import 'package:task_manager3/ui/screens/forgot_password_screen.dart';
-import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager3/ui/screens/sign_up_screen.dart';
 import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager3/ui/widgets/screen_background.dart';
@@ -25,7 +22,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _signInProgress = false;
+  final SignInController _signInController = SignInController();
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +72,18 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                   ),
                   SizedBox(height: 16),
-                  Visibility(
-                    visible: _signInProgress == false,
-                    replacement: CenteredCircularProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: _onTapSignInButton,
-                      child: Icon(Icons.arrow_circle_right_outlined),
-                    ),
+                  GetBuilder(
+                    init: _signInController,
+                    builder: (controller) {
+                      return Visibility(
+                        visible: controller.inProgress == false,
+                        replacement: CenteredCircularProgressIndicator(),
+                        child: ElevatedButton(
+                          onPressed: _onTapSignInButton,
+                          child: Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 16),
                   Center(
@@ -134,47 +136,29 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signIn() async {
-    _signInProgress = true;
-    setState(() {});
-
-    Map<String, String> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "password": _passwordTEController.text,
-    };
-
-    NetworkResponse response = await NetworkCaller.postRequest(
-      url: Urls.logInUrl,
-      body: requestBody,
-      isFromLogin: true,
+    final bool isSuccess = await _signInController.signIn(
+      _emailTEController.text.trim(),
+      _passwordTEController.text,
     );
 
-    _signInProgress = false;
-    setState(() {});
-
-    if (response.isSuccess) {
-      UserModel userModel = UserModel.fromJson(response.body!['data']);
-      String token = response.body!['token'];
-
-      await AuthController.saveUserData(userModel, token);
-
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        MainNavBarHolderScreen.name,
-        (predicate) => false,
-      );
-
-      showSnackBarMessage(context, 'Login Success');
-    } else {
-      showSnackBarMessage(context, response.errorMessage);
+    if(isSuccess){
+      Get.offAllNamed(SignInScreen.name);
+    }
+    else{
+      if(mounted){
+        showSnackBarMessage(context, _signInController.errorMessage!);
+      }
     }
   }
 
   void _onTapForgotPasswordButton() {
-    Navigator.pushReplacementNamed(context, ForgotPasswordScreen.name);
+    // Navigator.pushReplacementNamed(context, ForgotPasswordScreen.name);
+    Get.offAllNamed(ForgotPasswordScreen.name);
   }
 
   void _onTapSignUpButton() {
-    Navigator.pushReplacementNamed(context, SignUpScreen.name);
+    // Navigator.pushReplacementNamed(context, SignUpScreen.name);
+    Get.offAllNamed(SignUpScreen.name);
   }
 
   @override

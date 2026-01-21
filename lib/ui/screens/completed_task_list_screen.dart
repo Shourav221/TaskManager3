@@ -66,7 +66,9 @@ class _CompletedTaskListScreenState extends State<CompletedTaskListScreen> {
       }
       _completedTaskList = list;
     } else {
-      showSnackBarMessage(context, response.errorMessage);
+      if (mounted) {
+        showSnackBarMessage(context, response.errorMessage);
+      }
     }
     _getCompletedTaskInProgress = false;
     setState(() {});

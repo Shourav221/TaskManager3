@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager3/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager3/ui/screens/forgot_password_screen.dart';
 import 'package:task_manager3/ui/screens/main_nav_bar_holder_screen.dart';
@@ -15,7 +16,7 @@ class TaskManagerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       navigatorKey: navigator,
       theme: ThemeData(
         colorSchemeSeed: Colors.green,

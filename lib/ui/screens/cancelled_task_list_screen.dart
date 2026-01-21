@@ -64,7 +64,9 @@ class _CancelledTaskListScreenState extends State<CancelledTaskListScreen> {
       }
       _cancelledTaskList = list;
     } else {
-      showSnackBarMessage(context, response.errorMessage);
+      if (mounted) {
+        showSnackBarMessage(context, response.errorMessage);
+      }
     }
 
     _getCancelledTaskInProgress = false;
