@@ -6,6 +6,7 @@ import 'package:task_manager3/ui/controller/forgot_password_controller.dart';
 import 'package:task_manager3/ui/controller/new_task_controller.dart';
 import 'package:task_manager3/ui/controller/sign_in_controller.dart';
 import 'package:task_manager3/ui/controller/sign_up_controller.dart';
+import 'package:task_manager3/ui/controller/task_status_count_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override
@@ -17,5 +18,6 @@ class ControllerBinder extends Bindings {
     Get.put(CompletedTaskController());
     Get.put(ForgotPasswordController());
     Get.put(NewTaskController());
+    Get.put(TaskStatusCountController());
   }
 }
