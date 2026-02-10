@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:task_manager3/data/service/network_caller.dart';
-import 'package:task_manager3/data/service/urls.dart';
+import 'package:task_manager3/ui/controller/pin_verification_controller.dart';
 import 'package:task_manager3/ui/screens/set_password_screen.dart';
 import 'package:task_manager3/ui/screens/sign_in_screen.dart';
 import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
@@ -106,42 +106,25 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
   }
 
   void _onTapSignIn() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      SignInScreen.name,
-      (predicate) => false,
-    );
+    Get.offAllNamed(SignInScreen.name);
   }
 
   Future<void> _verifyOtp() async {
-    final String otp = _pinTEController.text;
-    final String email = widget.email;
-    _verifyOtpInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response = await NetworkCaller.getRequest(
-      url: Urls.recoverVerifyOtp(email, otp),
+    String email = widget.email;
+    String otp = _pinTEController.text;
+    bool isSuccess = await Get.find<PinVerificationController>().verifyOtp(
+      otp,
+      email,
     );
-    _verifyOtpInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
 
-    if (response.isSuccess) {
-      if (mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SetPasswordScreen(email: email, otp: otp),
-          ),
-          (predicate) => false,
-        );
-      }
+    if (isSuccess) {
+      Get.offAll(() => SetPasswordScreen(email: email, otp: otp));
     } else {
       if (mounted) {
-        showSnackBarMessage(context, response.errorMessage);
+        showSnackBarMessage(
+          context,
+          Get.find<PinVerificationController>().errorMessage,
+        );
       }
     }
   }
