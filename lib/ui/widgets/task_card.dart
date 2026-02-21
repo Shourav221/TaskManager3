@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager3/data/models/task_model.dart';
 import 'package:task_manager3/data/service/network_caller.dart';
 import 'package:task_manager3/data/service/urls.dart';
+import 'package:task_manager3/ui/controller/update_task_status_controller.dart';
 import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager3/ui/widgets/show_snack_bar_message.dart';
 
@@ -26,7 +28,6 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  bool _updateTaskStatusInProgress = false;
   bool _deleteTaskInProgress = false;
   @override
   Widget build(BuildContext context) {
@@ -65,13 +66,17 @@ class _TaskCardState extends State<TaskCard> {
                 ),
 
                 Spacer(),
-                Visibility(
-                  visible: _updateTaskStatusInProgress == false,
-                  replacement: CenteredCircularProgressIndicator(),
-                  child: IconButton(
-                    onPressed: _showTaskStatusDialog,
-                    icon: Icon(Icons.edit),
-                  ),
+                GetBuilder<UpdateTaskStatusController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.updateTaskStatusInProgress == false,
+                      replacement: CenteredCircularProgressIndicator(),
+                      child: IconButton(
+                        onPressed: _showTaskStatusDialog,
+                        icon: Icon(Icons.edit),
+                      ),
+                    );
+                  },
                 ),
                 Visibility(
                   visible: _deleteTaskInProgress == false,
@@ -180,25 +185,18 @@ class _TaskCardState extends State<TaskCard> {
   }
 
   Future<void> _updateTaskStatus(String status) async {
-    Navigator.pop(context);
-    _updateTaskStatusInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-    NetworkResponse response = await NetworkCaller.getRequest(
-      url: Urls.updateTaskStatusUrl(widget.taskModel.id, status),
-    );
+    Get.back;
+    bool isSuccess = await Get.find<UpdateTaskStatusController>()
+        .updateTaskStatus(widget.taskModel.id, status);
 
-    _updateTaskStatusInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-
-    if (response.isSuccess) {
+    if (isSuccess) {
       widget.onStatusUpdate();
     } else {
       if (mounted) {
-        showSnackBarMessage(context, response.errorMessage);
+        showSnackBarMessage(
+          context,
+          Get.find<UpdateTaskStatusController>().errorMessage,
+        );
       }
     }
   }
@@ -217,10 +215,13 @@ class _TaskCardState extends State<TaskCard> {
               },
               child: Text('Cancel'),
             ),
-            TextButton(onPressed: () {
-              Navigator.pop(ctx);
-              _deleteTask();
-            }, child: Text('Delete')),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                _deleteTask();
+              },
+              child: Text('Delete'),
+            ),
           ],
         );
       },

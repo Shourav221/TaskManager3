@@ -8,6 +8,7 @@ import 'package:task_manager3/ui/controller/progress_task_controller.dart';
 import 'package:task_manager3/ui/controller/sign_in_controller.dart';
 import 'package:task_manager3/ui/controller/sign_up_controller.dart';
 import 'package:task_manager3/ui/controller/task_status_count_controller.dart';
+import 'package:task_manager3/ui/controller/update_task_status_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override
@@ -21,5 +22,6 @@ class ControllerBinder extends Bindings {
     Get.put(NewTaskController());
     Get.put(TaskStatusCountController());
     Get.put(ProgressTaskController());
+    Get.put(UpdateTaskStatusController());
   }
 }
