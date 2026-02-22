@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:task_manager3/ui/controller/add_new_task_controller.dart';
 import 'package:task_manager3/ui/controller/cancelled_task_controller.dart';
 import 'package:task_manager3/ui/controller/completed_task_controller.dart';
+import 'package:task_manager3/ui/controller/delete_task_controller.dart';
 import 'package:task_manager3/ui/controller/forgot_password_controller.dart';
 import 'package:task_manager3/ui/controller/new_task_controller.dart';
 import 'package:task_manager3/ui/controller/progress_task_controller.dart';
@@ -23,5 +24,6 @@ class ControllerBinder extends Bindings {
     Get.put(TaskStatusCountController());
     Get.put(ProgressTaskController());
     Get.put(UpdateTaskStatusController());
+    Get.put(DeleteTaskController());
   }
 }

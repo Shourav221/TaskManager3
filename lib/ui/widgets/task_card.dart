@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager3/data/models/task_model.dart';
-import 'package:task_manager3/data/service/network_caller.dart';
-import 'package:task_manager3/data/service/urls.dart';
+import 'package:task_manager3/ui/controller/delete_task_controller.dart';
 import 'package:task_manager3/ui/controller/update_task_status_controller.dart';
 import 'package:task_manager3/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager3/ui/widgets/show_snack_bar_message.dart';
@@ -28,7 +27,6 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  bool _deleteTaskInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -78,15 +76,19 @@ class _TaskCardState extends State<TaskCard> {
                     );
                   },
                 ),
-                Visibility(
-                  visible: _deleteTaskInProgress == false,
-                  replacement: CenteredCircularProgressIndicator(),
-                  child: IconButton(
-                    onPressed: () {
-                      _showDeleteTaskDialog();
-                    },
-                    icon: Icon(Icons.delete),
-                  ),
+                GetBuilder<DeleteTaskController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.deleteTaskInProgress == false,
+                      replacement: CenteredCircularProgressIndicator(),
+                      child: IconButton(
+                        onPressed: () {
+                          _showDeleteTaskDialog();
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -211,6 +213,7 @@ class _TaskCardState extends State<TaskCard> {
           actions: [
             TextButton(
               onPressed: () {
+                Get.back();
                 Navigator.pop(ctx);
               },
               child: Text('Cancel'),
@@ -229,27 +232,21 @@ class _TaskCardState extends State<TaskCard> {
   }
 
   Future<void> _deleteTask() async {
-    _deleteTaskInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-    NetworkResponse response = await NetworkCaller.getRequest(
-      url: Urls.deleteTaskUrl(widget.taskModel.id),
+    bool isSuccess = await Get.find<DeleteTaskController>().deleteTask(
+      widget.taskModel.id,
     );
-    _deleteTaskInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
 
-    if (response.isSuccess) {
+    if (isSuccess) {
       widget.onDeleteTask();
       if (mounted) {
         showSnackBarMessage(context, 'Task deleted');
       }
     } else {
       if (mounted) {
-        showSnackBarMessage(context, response.errorMessage);
+        showSnackBarMessage(
+          context,
+          Get.find<DeleteTaskController>().errorMessage,
+        );
       }
     }
   }
